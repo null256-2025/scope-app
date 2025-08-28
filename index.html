@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Symmetrical Drawing App</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        touch-action: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      #app {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+      }
+      #ui {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 1000;
+        max-width: 280px;
+      }
+      
+      @media (max-width: 768px) {
+        #ui {
+          top: 10px;
+          right: 10px;
+          left: 10px;
+          max-width: none;
+          width: auto;
+        }
+        
+        #ui .tp-dfwv {
+          font-size: 14px;
+        }
+        
+        #ui .tp-btnv_b {
+          padding: 8px 12px;
+          font-size: 14px;
+        }
+        
+        #ui .tp-lblv_l {
+          min-width: 60px;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        #ui {
+          top: 5px;
+          right: 5px;
+          left: 5px;
+        }
+        
+        #ui .tp-dfwv {
+          font-size: 12px;
+        }
+        
+        #ui .tp-btnv_b {
+          padding: 6px 10px;
+          font-size: 12px;
+        }
+        
+        #ui .tp-lblv_l {
+          min-width: 50px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div id="ui"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
