@@ -61,9 +61,19 @@ const sketch = (p: p5) => {
     if (uiElement) {
       const rect = uiElement.getBoundingClientRect()
       // 座標がUI要素の範囲内かチェック
-      if (x >= rect.left && x <= rect.right && 
+      if (x >= rect.left && x <= rect.right &&
           y >= rect.top && y <= rect.bottom) {
         return // UI範囲内なら描画処理をスキップ
+      }
+    }
+
+    // ハンバーガーボタンの範囲も除外
+    const menuBtn = document.getElementById('menu-toggle')
+    if (menuBtn) {
+      const mrect = menuBtn.getBoundingClientRect()
+      if (x >= mrect.left && x <= mrect.right &&
+          y >= mrect.top && y <= mrect.bottom) {
+        return
       }
     }
     
@@ -87,12 +97,12 @@ const sketch = (p: p5) => {
       const touch = p.touches[0] as Touch
       startDrawing(touch.x, touch.y)
     }
-    return false // prevent default
+    // Do not prevent default globally; allow UI buttons to receive touch events
   }
 
   p.touchEnded = () => {
     isDrawing = false
-    return false // prevent default
+    // Do not prevent default globally; allow UI buttons to receive touch events
   }
 
   p.windowResized = () => {
@@ -203,3 +213,24 @@ pane.addButton({ title: 'PNG で保存' }).on('click', () => {
 
 const p5Instance = new p5(sketch);
 (window as any).p5Instance = p5Instance
+
+// Mobile hamburger menu toggle
+const uiEl = document.getElementById('ui')!
+const menuBtn = document.getElementById('menu-toggle')
+if (menuBtn) {
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation()
+    uiEl.classList.toggle('open')
+    const isOpen = uiEl.classList.contains('open')
+    menuBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false')
+  })
+
+  // Close panel when tapping outside
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement
+    if (!uiEl.contains(target) && target !== menuBtn && uiEl.classList.contains('open')) {
+      uiEl.classList.remove('open')
+      menuBtn.setAttribute('aria-expanded', 'false')
+    }
+  })
+}
