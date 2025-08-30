@@ -1,6 +1,12 @@
 import p5 from 'p5'
 import { Pane } from 'tweakpane'
 
+// Touch型の定義
+type Touch = {
+  x: number
+  y: number
+}
+
 interface DrawingSettings {
   divisions: number
   mirrorHorizontal: boolean
@@ -36,8 +42,9 @@ const sketch = (p: p5) => {
     if (isDrawing && (p.mouseIsPressed || (p.touches && p.touches.length > 0))) {
       let currentX, currentY
       if (p.touches && p.touches.length > 0) {
-        currentX = p.touches[0].x
-        currentY = p.touches[0].y
+        const touch = p.touches[0] as Touch
+        currentX = touch.x
+        currentY = touch.y
       } else {
         currentX = p.mouseX
         currentY = p.mouseY
@@ -77,7 +84,8 @@ const sketch = (p: p5) => {
 
   p.touchStarted = () => {
     if (p.touches && p.touches.length > 0) {
-      startDrawing(p.touches[0].x, p.touches[0].y)
+      const touch = p.touches[0] as Touch
+      startDrawing(touch.x, touch.y)
     }
     return false // prevent default
   }
@@ -138,42 +146,42 @@ function drawSymmetrical(p: p5, x: number, y: number, lastX: number, lastY: numb
   }
 }
 
-const pane = new Pane({ container: document.getElementById('ui')! })
+const pane = new Pane({ container: document.getElementById('ui')! }) as any
 
-pane.addBinding(settings, 'divisions', { 
-  min: 1, 
-  max: 32, 
+pane.addBinding(settings, 'divisions', {
+  min: 1,
+  max: 32,
   step: 1,
   label: '分割数'
 })
 pane.addBinding(settings, 'mirrorHorizontal', { label: '水平ミラー' })
 pane.addBinding(settings, 'mirrorVertical', { label: '垂直ミラー' })
-pane.addBinding(settings, 'strokeWeight', { 
-  min: 0.5, 
-  max: 20, 
+pane.addBinding(settings, 'strokeWeight', {
+  min: 0.5,
+  max: 20,
   step: 0.5,
   label: '線の太さ'
 })
-pane.addBinding(settings, 'strokeColor', { 
+pane.addBinding(settings, 'strokeColor', {
   color: { type: 'float' },
   label: '線の色'
 })
-pane.addBinding(settings, 'backgroundColor', { 
+pane.addBinding(settings, 'backgroundColor', {
   color: { type: 'float' },
   label: '背景色'
 }).on('change', () => {
   const p5Instance = (window as any).p5Instance
   if (p5Instance) {
     p5Instance.background(
-      settings.backgroundColor.r * 255, 
-      settings.backgroundColor.g * 255, 
+      settings.backgroundColor.r * 255,
+      settings.backgroundColor.g * 255,
       settings.backgroundColor.b * 255
     )
   }
 })
-pane.addBinding(settings, 'sensitivity', { 
-  min: 0.1, 
-  max: 3.0, 
+pane.addBinding(settings, 'sensitivity', {
+  min: 0.1,
+  max: 3.0,
   step: 0.1,
   label: '感度'
 })
